@@ -4,11 +4,10 @@ bool: dominance;
 
 array [1..n] of int: w;          % weight of each item
 array [1..n] of int: v;          % value of each item
-% array[1..n] of int: sortedidx; 
+array[1..n] of int: sortedidx; 
 
 array [1..n] of var 0..1: x;  
-int: totalValue = sum(v);
-var 0..totalValue: objective;
+var int: objective;
 
 constraint sum (i in 1..n) (w[i]*x[i]) <= W;
 constraint sum (i in 1..n) (v[i]*x[i]) >= objective;
@@ -25,5 +24,5 @@ constraint dominance -> forall (i, j in 1..n where i < j) (
 );
 
 solve 
-%   :: int_search([ x[sortedidx[i]]| i in 1..n ], input_order, indomain_max)
+   :: int_search([ x[sortedidx[i]]| i in 1..n ], input_order, indomain_max)
 maximize objective;
