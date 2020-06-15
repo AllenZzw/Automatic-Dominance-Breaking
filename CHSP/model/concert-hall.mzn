@@ -23,6 +23,8 @@ function bool: overlaps(Offer: o, Time: t) = start[o] <= t /\ t < end[o];
 array [Offer] of set of Offer: cliques = [ { p | p in Offer where overlaps(p, start[o]) } | o in Offer ];
 function bool: clique_is_maximal(Offer: o) = forall(o1 in Offer where o < o1 /\ card(cliques[o]) <= card(cliques[o1]) ) ( not (cliques[o]  subset cliques[o1]) ); 
 
+constraint forall (o in Offer) (assign[o] in {0} union feasible_halls(o));
+
 %% Overlapping events cannot share a hall.
 constraint forall (offer in Offer where clique_is_maximal(offer))(alldifferent_except_0([assign[o] | o in cliques[offer]]) :: bounds ); 
 
@@ -41,8 +43,6 @@ function bool: dominates(Offer: p, Offer: q) =
   /\ feasible_halls(q) subset feasible_halls(p)
   /\ price[p] >= price[q]
   /\ (price[p] > price[q] \/ p < q);
-
-constraint forall (o in Offer) (assign[o] in {0} union feasible_halls(o));
 
 %% Symmetry and dominance breaking constraints
 bool: dominance;
